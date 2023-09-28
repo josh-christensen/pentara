@@ -1,11 +1,10 @@
 Package: pentara
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Simplify Common Pentara Workflows
 Version: 0.1.0
 Author: Joshua Christensen
 Maintainer: Joshua Christensen <jchristensen@pentara.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Provide tools to simplify common work flows for R users at Pentara Corporation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

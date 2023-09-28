@@ -19,12 +19,12 @@ snippets <- function() {
 
   # Name of files containing snippet code to copy
   #
-  pckgSnippetsFiles <- c("Rsnippets.txt", "Rmdsnippets.txt")
+  pckgSnippetsFiles <- c("Rsnippets.txt")#, "Rmdsnippets.txt")
 
   # Name of files to copy into. Order has to be the same
   # as in 'pckgSnippetsFiles'
   #
-  rstudioSnippetsFiles <- c("r.snippets", "markdown.snippets")
+  rstudioSnippetsFiles <- c("r.snippets")#, "markdown.snippets")
 
   # Path to directory for RStudios user files depends on OS
   #
@@ -66,13 +66,16 @@ snippets <- function() {
     # the default snippets from the 'user file'
     #
     if (!file.exists(rstudioSnippetsFilePath)) {
-      message(paste0( "'", rstudioSnippetsFilePath, "' does not exist yet.\n",
-                   "Use RStudio -> Tools -> Global Options -> Code -> Edit Snippets\n",
-                   "to initalize the user-defined snippets file by adding a dummy snippet\n"))
-      next
+      # message(paste0( "'", rstudioSnippetsFilePath, "' does not exist yet.\n",
+      #              "Use RStudio -> Tools -> Global Options -> Code -> Edit Snippets\n",
+      #              "to initalize the user-defined snippets file by adding a dummy snippet\n"))
+      # next
+      usethis::edit_rstudio_snippets(type = "r")
+      rstudioapi::documentSave()
+      rstudioapi::documentClose()
     }
 
-    # Extract 'names' of already existing snitppets
+    # Extract 'names' of already existing snippets
     #
     rstudioSnippetsFileContent <- readLines(rstudioSnippetsFilePath)
     rstudioSnippetDefinitions <- rstudioSnippetsFileContent[grepl("^snippet (.*)", rstudioSnippetsFileContent)]
@@ -102,7 +105,7 @@ snippets <- function() {
         cat(paste0("\n(The following snippets will NOT be added because there is already a snippet with that name:\n",
                    paste0(snippetsNotToCopy, collapse=", ") ,")"))
       }
-      answer <- readline(prompt="Do you want to procedd (y/n): ")
+      answer <- readline(prompt="Do you want to proceed (y/n): ")
       if (substr(answer, 1, 1) == "n") {
         next()
       }
@@ -129,8 +132,10 @@ snippets <- function() {
 
       # Make sure there is at least one empty line between entries
       #
-      if (utils::tail(readLines(rstudioSnippetsFilePath), n=1) != "") {
-        snippetText <- paste0("\n", snippetText)
+      if(!length(readLines(rstudioSnippetsFilePath)) == 0) {
+        if (utils::tail(readLines(rstudioSnippetsFilePath), n=1) != "") {
+          snippetText <- paste0("\n", snippetText)
+        }
       }
 
       # Append snippet block, print message
@@ -150,5 +155,4 @@ snippets <- function() {
   rstudioapi::documentClose()
 
   return(invisible(added))
-
 }
