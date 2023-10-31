@@ -124,10 +124,11 @@ snippet program_header
 	#
 	# Author: `r rstudioapi::userIdentity()`
 	# Date Started: `r Sys.Date()`
-	#
-	# Input:
-	# Output:
 	# Notes:
+	#
+	# Date Modified:
+	# Modified By:
+	# Reason Modified:
 	#
 	# Copyright `r format(Sys.Date(), "%Y")` Pentara Corporation
 	###########################################################################
