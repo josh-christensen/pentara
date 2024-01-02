@@ -1,7 +1,9 @@
 #' @title Import package snippets
 #'
-#' @description \code{snippets} copies all (missing) snippet definitions
-#'   in 'inst/rstudio/Rsnippets.txt' to the RStudio user snippet file.
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' `snippets` copies all (missing) snippet definitions
+#' in `inst/rstudio/Rsnippets.txt` to the RStudio user snippet file.
 #'
 #' @return boolean invisible(FALSE) if nothing was added, invisible(TRUE) if snippet definitions were added
 #' @export
