@@ -2,7 +2,7 @@
 % Please edit documentation in R/snippets.R
 \name{snippets}
 \alias{snippets}
-\title{Export snippets}
+\title{Import package snippets}
 \usage{
 snippets()
 }
@@ -10,8 +10,9 @@ snippets()
 boolean invisible(FALSE) if nothing was added, invisible(TRUE) if snippet definitions were added
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 \code{snippets} copies all (missing) snippet definitions
-  in 'inst/rstudio/Rsnippets.txt' and 'Rmdsnippets.txt' to the RStudios user snippet location.
+in \code{inst/rstudio/Rsnippets.txt} to the RStudio user snippet file.
 }
 \examples{
 \dontrun{snippets()}

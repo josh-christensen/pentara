@@ -1,7 +1,9 @@
-#' @title Export snippets
+#' @title Import package snippets
 #'
-#' @description \code{snippets} copies all (missing) snippet definitions
-#'   in 'inst/rstudio/Rsnippets.txt' and 'Rmdsnippets.txt' to the RStudios user snippet location.
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' `snippets` copies all (missing) snippet definitions
+#' in `inst/rstudio/Rsnippets.txt` to the RStudio user snippet file.
 #'
 #' @return boolean invisible(FALSE) if nothing was added, invisible(TRUE) if snippet definitions were added
 #' @export
@@ -62,17 +64,10 @@ snippets <- function() {
     #
     rstudioSnippetsFilePath <- file.path(rstudioSnippetsPathBase, rstudioSnippetsFiles[i])
 
-    # If targeted RStudios user file does not exist, raise error (otherwise we would 'remove')
-    # the default snippets from the 'user file'
-    #
+    # If targeted RStudios user file does not exist create it (Rstudio defaults
+    # are included in package snippets so they won't be lost)
     if (!file.exists(rstudioSnippetsFilePath)) {
-      # message(paste0( "'", rstudioSnippetsFilePath, "' does not exist yet.\n",
-      #              "Use RStudio -> Tools -> Global Options -> Code -> Edit Snippets\n",
-      #              "to initalize the user-defined snippets file by adding a dummy snippet\n"))
-      # next
-      usethis::edit_rstudio_snippets(type = "r")
-      rstudioapi::documentSave()
-      rstudioapi::documentClose()
+      file.create(rstudioSnippetsFilePath)
     }
 
     # Extract 'names' of already existing snippets
@@ -90,25 +85,9 @@ snippets <- function() {
     snippetsToCopy <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
     snippetsNotToCopy <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
     if (length(snippetsToCopy) == 0) {
-      # cat(paste0("(\nFollowing snippets will NOT be added because there is already a snippet with that name: ",
-      #            paste0(snippetsNotToCopy, collapse=", ") ,")"))
-      next()
-    }
-
-    # Inform user about changes, ask to confirm action
-    #
-    if (interactive()) {
-      cat(paste0("You are about to add the following ", length(snippetsToCopy),
-                 " snippets to '", rstudioSnippetsFilePath, "':\n",
-                 paste0(paste0("-", snippetsToCopy), collapse="\n")))
-      if (length(snippetsNotToCopy) > 0) {
-        cat(paste0("\n(The following snippets will NOT be added because there is already a snippet with that name:\n",
-                   paste0(snippetsNotToCopy, collapse=", ") ,")"))
-      }
-      answer <- readline(prompt="Do you want to proceed (y/n): ")
-      if (substr(answer, 1, 1) == "n") {
-        next()
-      }
+      cat(paste0("(\nFollowing snippets will NOT be added because there is already a snippet with that name: ",
+                 paste0(snippetsNotToCopy, collapse=", ") ,")"))
+      next
     }
 
     # Create list of line numbers where snippet definitons start
@@ -141,16 +120,26 @@ snippets <- function() {
       # Append snippet block, print message
       #
       cat(paste0(snippetText, "\n"), file = rstudioSnippetsFilePath, append = TRUE)
-      cat(paste0("* Added '", s, "' to '", rstudioSnippetsFilePath, "'\n"))
+      # TODO Change this to make sure it individually checks all of the
+      # snippets, not just the last
       added <- TRUE
+    }
+
+    # Inform user about changes
+    #
+    if (interactive()) {
+      cat(paste0("The following ", length(snippetsToCopy),
+                 " snippets were added to '", rstudioSnippetsFilePath, "':\n",
+                 paste0(paste0("-", gsub("snippet", "", snippetsToCopy)), collapse="\n")))
+      if (length(snippetsNotToCopy) > 0) {
+        cat(paste0("\n(The following snippets were NOT added because there was already a snippet with that name:\n",
+                   paste0(snippetsNotToCopy, collapse=", ") ,")"))
+      }
     }
   }
 
-  if (added) {
-    cat("Restart RStudio to use new snippets")
-  }
-
-  usethis::edit_rstudio_snippets(type = "r")
+  # Ensure that snippets are immediately available for use
+  suppressMessages(usethis::edit_rstudio_snippets(type = "r"))
   rstudioapi::documentSave()
   rstudioapi::documentClose()
 
