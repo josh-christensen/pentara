@@ -119,8 +119,8 @@ snippet program_header
 	###########################################################################
 	# Program Name: `r tail(strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]], 1)`
 	# Description: ${1:description}
-	# Client: ${2:client}
-	# Protocol: ${3:protocol}
+	# Client: `r strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]][3]`
+	# Protocol: `r strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]][4]`
 	#
 	# Author: `r rstudioapi::userIdentity()`
 	# Date Started: `r Sys.Date()`
