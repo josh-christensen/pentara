@@ -1,0 +1,23 @@
+snippet program_header
+	###########################################################################
+	# Program Name: `r tail(strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]], 1)`
+	# Description: ${1:description}
+	# Client: `r strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]][3]`
+	# Protocol: `r strsplit(rstudioapi::getActiveDocumentContext()$path, "/")[[1]][4]`
+	#
+	# Author: `r rstudioapi::userIdentity()`
+	# Date Started: `r Sys.Date()`
+	# Notes:
+	#
+	# Date Modified:
+	# Modified By:
+	# Reason Modified:
+	#
+	# Copyright `r format(Sys.Date(), "%Y")` Pentara Corporation
+	###########################################################################
+
+	# Attach packages ---------------------------------------------------------
+
+	# Read in the data --------------------------------------------------------
+	${0}
+

@@ -1,7 +1,7 @@
 Package: pentara
 Type: Package
 Title: Simplify Common Pentara Workflows
-Version: 0.1.0
+Version: 0.2.0
 Author: Joshua Christensen
 Maintainer: Joshua Christensen <jchristensen@pentara.com>
 Description: Provide tools to simplify common work flows for R users at Pentara Corporation.

@@ -16,17 +16,17 @@ snippets <- function() {
   # if not on RStudio or RStudioServer exit
   #
   if (!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) {
-    return(NULL)
+    stop("Snippets are a feature of the Rstudio IDE")
   }
 
   # Name of files containing snippet code to copy
   #
-  pckgSnippetsFiles <- c("Rsnippets.txt")#, "Rmdsnippets.txt")
+  pckgSnippetsFiles <- c("default_r_snippets.txt", "r_snippets.txt")#, "Rmdsnippets.txt")
 
   # Name of files to copy into. Order has to be the same
   # as in 'pckgSnippetsFiles'
   #
-  rstudioSnippetsFiles <- c("r.snippets")#, "markdown.snippets")
+  rstudioSnippetsFiles <- c("r.snippets", "r.snippets")#, "markdown.snippets")
 
   # Path to directory for RStudios user files depends on OS
   #
@@ -46,7 +46,9 @@ snippets <- function() {
 
     # Try to get template, if template is not found skip it
     #
-    pckgSnippetsFilesPath <- system.file("rstudio", pckgSnippetsFiles[i], package = "pentara")
+    current_snippet_file <- pckgSnippetsFiles[i]
+    is_default_file <- grepl("^default", current_snippet_file)
+    pckgSnippetsFilesPath <- system.file("rstudio", current_snippet_file, package = "pentara")
     if (pckgSnippetsFilesPath == "") {
       next
     }
@@ -62,7 +64,8 @@ snippets <- function() {
 
     # Construct path for destination file
     #
-    rstudioSnippetsFilePath <- file.path(rstudioSnippetsPathBase, rstudioSnippetsFiles[i])
+    current_rstudio_snippet_file <- rstudioSnippetsFiles[i]
+    rstudioSnippetsFilePath <- file.path(rstudioSnippetsPathBase, current_rstudio_snippet_file)
 
     # If targeted RStudios user file does not exist create it (Rstudio defaults
     # are included in package snippets so they won't be lost)
@@ -82,12 +85,84 @@ snippets <- function() {
     # find defintions appearing in packageSnippets but not in rstudioSnippets
     # if no snippets are missing go to next file
     #
-    snippetsToCopy <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
-    snippetsNotToCopy <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
-    if (length(snippetsToCopy) == 0) {
-      cat(paste0("(\nFollowing snippets will NOT be added because there is already a snippet with that name: ",
-                 paste0(snippetsNotToCopy, collapse=", ") ,")"))
-      next
+    if(is_default_file) {
+      # For default files
+      # Copy anything that should be present and isn't
+      snippetsToCopy <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
+      # Otherwise don't copy it at all
+      snippetsNotToCopy <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
+      # If there is nothing to copy from this file we are done
+      if (length(snippetsToCopy) == 0) {
+        next
+      }
+    } else {
+      # For non default files find pckg snippets that aren't present
+      pckg_snippets_not_in_rstudio <- setdiff(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
+      # And snippets that are already present
+      shared_snippets <- intersect(trimws(pckgSnippetsFileDefinitions), trimws(rstudioSnippetDefinitions))
+
+      # For those that are already present check if they match
+      matching_shared_snippets <- character()
+      nonmatching_shared_snippets <- character()
+      rstudio_refresh_indices <- numeric()
+
+      pckg_snippet_cutoffs <- c(grep("^snippet", pckgSnippetsFileContent), length(pckgSnippetsFileContent) + 1)
+      rstudio_snippet_cutoffs <- c(grep("^snippet", rstudioSnippetsFileContent), length(rstudioSnippetsFileContent) + 1)
+
+      for (current_snippet in shared_snippets) {
+        pckg_current_snippet_start <- grep(current_snippet, pckgSnippetsFileContent)
+        pckg_current_snippet_end <- pckg_snippet_cutoffs[which(pckg_snippet_cutoffs == pckg_current_snippet_start) + 1] - 1
+
+        rstudio_current_snippet_start <- grep(current_snippet, rstudioSnippetsFileContent)
+        rstudio_current_snippet_end <- rstudio_snippet_cutoffs[which(rstudio_snippet_cutoffs == rstudio_current_snippet_start) + 1] - 1
+
+        pckg_current_snippet_text <- pckgSnippetsFileContent[pckg_current_snippet_start:pckg_current_snippet_end]
+        rstudio_current_snippet_text <- rstudioSnippetsFileContent[rstudio_current_snippet_start:rstudio_current_snippet_end]
+
+        snippets_are_equal <- identical(pckg_current_snippet_text, rstudio_current_snippet_text)
+        if (snippets_are_equal) {
+          matching_shared_snippets <- append(matching_shared_snippets, current_snippet)
+        } else {
+          nonmatching_shared_snippets <- append(nonmatching_shared_snippets, current_snippet)
+          rstudio_refresh_indices <- append(rstudio_refresh_indices, rstudio_current_snippet_start:rstudio_current_snippet_end)
+        }
+      }
+
+      # Rename to match preexisting code
+      snippetsToCopy <- pckg_snippets_not_in_rstudio
+      snippetsNotToCopy <- matching_shared_snippets
+      snippetsToRefresh <- nonmatching_shared_snippets
+
+      # Remove the snippets that need to be refreshed from the original file and
+      # mark them for addition
+      if (length(snippetsToRefresh) != 0 & interactive()) {
+        cat(
+          "The following snippets will be overwritten:\n",
+          paste0("- ", snippetsToRefresh, collapse = "\n")
+        )
+        user_input <- readline("Proceed? (y/n): ")
+        while(!(user_input %in% c("y", "n"))) {
+          user_input <- readline("Invalid input. Please enter 'y' or 'n': ")
+        }
+        if(user_input == "y") {
+          snippetsToCopy <- c(snippetsToCopy, snippetsToRefresh)
+          rstudio_file_without_refresh <- rstudioSnippetsFileContent[-rstudio_refresh_indices]
+          cat(paste0(rstudio_file_without_refresh, collapse = "\n"), file = rstudioSnippetsFilePath)
+        }
+      }
+
+      if (length(c(pckg_snippets_not_in_rstudio, nonmatching_shared_snippets)) == 0) {
+        cat(
+          paste0(
+            "All snippets in package file ",
+            current_snippet_file,
+            " are present in Rstudio file ",
+            current_rstudio_snippet_file,
+            " and have identical definitions."
+          )
+        )
+        next
+      }
     }
 
     # Create list of line numbers where snippet definitons start
@@ -130,11 +205,11 @@ snippets <- function() {
     if (interactive()) {
       cat(paste0("The following ", length(snippetsToCopy),
                  " snippets were added to '", rstudioSnippetsFilePath, "':\n",
-                 paste0(paste0("-", gsub("snippet", "", snippetsToCopy)), collapse="\n")))
-      if (length(snippetsNotToCopy) > 0) {
-        cat(paste0("\n(The following snippets were NOT added because there was already a snippet with that name:\n",
-                   paste0(snippetsNotToCopy, collapse=", ") ,")"))
-      }
+                 paste0(paste0("-", gsub("snippet", "", snippetsToCopy)), collapse="\n")), "\n")
+      # if (length(snippetsNotToCopy) > 0) {
+      #   cat(paste0("\nThe following ", length(snippetsNotToCopy), " snippets were NOT added because there was already a snippet with that name:\n",
+      #              paste0("- ", snippetsNotToCopy, collapse="\n")))
+      # }
     }
   }
 
