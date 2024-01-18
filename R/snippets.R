@@ -9,6 +9,9 @@
 #' @export
 #'
 #' @examples \dontrun{snippets()}
+
+# TODO Clean up the code so it doesn't look like it came from 2 places
+# TODO Make the maintenance of Rstudio defaults quieter
 snippets <- function() {
 
   added <- FALSE
