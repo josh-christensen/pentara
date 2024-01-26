@@ -3,21 +3,27 @@
 #' @description Automatically fill in file paths based on Pentara SOP file
 #' structures to make reading ADaM datasets into scripts easier.
 #'
-#' @param name The name of the SAS dataset.
+#' @param name The name of a SAS dataset in the ADaM directory.
 #'
 #' @return invisibly returns NULL
 #'
 #' @examples
-#' \dontrun{adam()}
-#' @noRd
+#' \dontrun{adam("adsl")}
+#'
+#' @export
 
-adam <- function() {
-  # Check if the user is on Rstudio
+adam <- function(name) {
+  file_name <- paste0(name, ".sas7bdat")
+
+  # Branch between
   if (Sys.getenv("RSTUDIO") == "1") {
-    rstudioapi::getActiveDocumentContext()$path
-    haven::read_sas()
+    current_document_path <- rstudioapi::getActiveDocumentContext()$path
+    protocol_root <- stringr::str_extract(current_document_path, "([^/]*/){4}")
+    protocol_root <- stringr::str_remove(protocol_root, "/$")
+    full_path <- file.path(protocol_root, "Data", "Production", "ADaM", file_name)
+    dataset <- haven::read_sas(full_path)
   } else {
-    haven::read_sas()
+    stop("Method for users not on Rstudio not yet implemented")
   }
 
   return(dataset)
