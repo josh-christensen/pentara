@@ -12,7 +12,7 @@
 #'
 #' @export
 
-adam <- function(name) {
+read_dataset <- function(name, type, client, protocol) {
   file_name <- paste0(name, ".sas7bdat")
 
   # Branch between
