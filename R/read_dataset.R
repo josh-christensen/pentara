@@ -12,7 +12,7 @@
 #'
 #' @export
 
-read_dataset <- function(name, type, client, protocol) {
+read_dataset <- function(name, type, client, protocol, production = TRUE) {
   # TODO Check if the function is being run from the P: drive
   # TODO Check that type is populated
   # TODO Implement argument matching for type
@@ -28,12 +28,16 @@ read_dataset <- function(name, type, client, protocol) {
     protocol_root <- stringr::str_remove(protocol_root, "/$")
     # Create the full path to the dataset
     full_path <- file.path(protocol_root, "Data", "Production", "ADaM", file_name)
-    dataset <- haven::read_sas(full_path)
   } else {
     stop("Method for users not on Rstudio not yet implemented")
     # TODO Check if client, protocol and type are all populated
     # TODO make client searchable from protocol
   }
+
+  # TODO Check if the file path requested exists
+
+  # Read The dataset
+  dataset <- haven::read_sas(full_path)
 
   return(dataset)
 }
