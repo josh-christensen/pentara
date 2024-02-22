@@ -1,3 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^pforest\.R$
+^subject_level_gst\.R$
+^sforest\.R$
+^sforest_helpers\.R$
+^remaining_pok_functions\.R$
+
