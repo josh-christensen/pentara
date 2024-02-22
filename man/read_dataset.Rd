@@ -2,21 +2,35 @@
 % Please edit documentation in R/read_dataset.R
 \name{read_dataset}
 \alias{read_dataset}
-\title{Read ADaM datasets from Pentara's file structure}
+\title{Read SAS datasets from Pentara's file structure}
 \usage{
-read_dataset(name, type, client, protocol)
+read_dataset(name, type, protocol, client)
 }
 \arguments{
 \item{name}{The name of a SAS dataset in the ADaM directory.}
+
+\item{type}{One of orig, vorig, sdtm, vsdtm, adam or vadam
+corresponding to original, SDTM, and ADaM datasets in production
+and validation.}
+
+\item{protocol}{The protocol directory. Only required if the user
+is not using RStudio.}
+
+\item{client}{The client directory. Only required if the user is
+not using RStudio.}
 }
 \value{
 invisibly returns NULL
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 Automatically fill in file paths based on Pentara SOP file
-structures to make reading ADaM datasets into scripts easier.
+structures to make reading SAS datasets into scripts easier.
 }
 \examples{
-\dontrun{adam("adsl")}
+\dontrun{
+  read_dataset("adsl", "adam")
+  read_dataset("ex", "sdtm", "HOPE-9", "cerebrocognaid")
+}
 
 }
