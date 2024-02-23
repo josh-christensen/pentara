@@ -21,3 +21,6 @@ snippet program_header
 	# Read in the data --------------------------------------------------------
 	${0}
 
+snippet adam
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "ADaM")`/${1:dataset_name}.sas7bdat")
+

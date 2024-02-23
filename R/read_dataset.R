@@ -18,8 +18,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'   read_dataset("adsl", "adam")
-#'   read_dataset("ex", "sdtm", "HOPE-9", "cerebrocognaid")
+#'   read_dataset("adsl", "adam", "HOPE-9")
+#'   read_dataset("ex", "vsdtm", "HOPE-9", "cerebrocognaid")
 #' }
 #'
 #' @export
@@ -35,12 +35,13 @@ read_dataset <- function(name, type, protocol, client) {
     stop("No type argument provided. Choose one of sdtm, adam, orig, vsdtm, vadam and vorig.")
   }
 
+  # TODO if not provided infer type from name
   # Argument matching for type
   lower_type <- tolower(type)
-  acceptable_types <- c("orig", "sdtm", "adam", "vorig", "vsdtm", "vadam")
+  acceptable_types <- c("orig", "sdtm", "adam", "tlf", "vorig", "vsdtm", "vadam", "vtlf")
   type_index <- grepl(lower_type, acceptable_types)
   if (!any(type_index)) {
-    stop("Invalid type argument provided. Choose one of sdtm, adam, orig, vsdtm, vadam and vorig.")
+    stop("Invalid type argument provided. Choose one of sdtm, adam, orig, tlf, vsdtm, vadam, vorig and vtlf.")
   }
   type_path <- switch(
     lower_type,
@@ -49,34 +50,22 @@ read_dataset <- function(name, type, protocol, client) {
     sdtm = "Production/SDTM",
     vsdtm = "Validation/SDTM",
     adam = "Production/ADaM",
-    vadam = "Validation/ADaM"
+    vadam = "Validation/ADaM",
+    tlf = "Production/TLF",
+    vtlf = "Validation/TLF"
   )
 
   # Append the SAS dataset file extension to the dataset name
   file_name <- paste0(name, ".sas7bdat")
 
-  # Branch depending on availability of RStudio functionality
-  if (Sys.getenv("RSTUDIO") == "1") {
-
-    # Get the current document path
-    current_document_path <- rstudioapi::getActiveDocumentContext()$path
-
-    # Get the protocol root directory
-    protocol_root <- stringr::str_extract(current_document_path, "([^/]*/){4}")
-    protocol_root <- stringr::str_remove(protocol_root, "/$")
-  } else {
-    # TODO Make client searchable from protocol
-    # Check if client and protocol are both supplied
-    if (missing(client)) {
-      stop("RStudio is not available and no client argument was provided.")
-    }
-    if (missing(protocol)) {
-      stop("RStudio is not available and no protocol argument was provided.")
-    }
-
-    # Get the protocol root directory
-    protocol_root <- file.path("P:/Clients", client, protocol)
+  # TODO If not provided infer client from protocol
+  # If client cannot be inferred from protocol, check if the argument was provided
+  if (missing(client)) {
+    stop("The protocol argument is non-unique and no client argument was provided.")
   }
+
+  # Get the protocol root directory
+  protocol_root <- file.path("P:/Clients", client, protocol)
 
   # Create the full path to the dataset
   full_path <- file.path(protocol_root, "Data", type_path, file_name)
