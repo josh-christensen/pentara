@@ -24,3 +24,33 @@ snippet program_header
 snippet adam
   haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "ADaM")`/${1:dataset_name}.sas7bdat")
 
+snippet vadam
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "ADaM")`/${1:dataset_name}.sas7bdat")
+
+snippet tlf
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "TLF")`/${1:dataset_name}.sas7bdat")
+
+snippet vtlf
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "TLF")`/${1:dataset_name}.sas7bdat")
+
+snippet sdtm
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "SDTM")`/${1:dataset_name}.sas7bdat")
+
+snippet vsdtm
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "SDTM")`/${1:dataset_name}.sas7bdat")
+
+snippet orig
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "Original", "Current")`/${1:dataset_name}.sas7bdat")
+
+snippet interim
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "Interim")`/${1:dataset_name}.sas7bdat")
+
+snippet vinterim
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "Interim")`/${1:dataset_name}.sas7bdat")
+
+snippet other
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Production", "Other")`/${1:dataset_name}.sas7bdat")
+
+snippet vother
+  haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "Other")`/${1:dataset_name}.sas7bdat")
+

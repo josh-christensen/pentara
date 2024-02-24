@@ -3,13 +3,54 @@
 #' @description
 #' Creates forest plot that matches Pentara's historic forest plot style.
 #'
-#' @param dat a dataset to base the plot on
+#' @param dat data for the plot
+#' @param res a string naming a column to plot as points
+#' @param ci.lb a string naming column to plot as ci upper bounds
+#' @param ci.ub a string naming column to plot as ci lower bounds
+#' @param ordervar a string naming a column that defines the order of sections. The column must be numeric and have the same value for all rows in the same section.
+#' @param orderlab a string naming a column of section labels. The column must be character and have the same value for all rows in the same section.
+#' @param suborder a string naming a column that defines the order within sections. The column must be numeric and have different values for all rows in the same section.
+#' @param sublab a string naming a column of row labels. The column must be character and have different values for all rows in the same section.
+#' @param xlab a string to be used as the x-axis label
+#' @param footnote
+#' @param varlist a character vector containing the names of other columns to be included in the plot
+#' @param varlabs a character vector containing the labels to be used in the plot for variables in varlist
+#' @param pvals a character vector containing the names of columns in varlist that should be formatted as p-values
+#' @param refline
+#' @param col
+#' @param wd1
+#' @param wd2
+#' @param alim
+#' @param col1
+#' @param bold.col
+#' @param latex.out
+#' @param express
+#' @param expresso
+#' @param highbold
+#' @param digits
+#' @param refcol
+#' @param show
+#' @param nobold
+#' @param wgts
+#' @param trendthresh
+#' @param trend.col
+#' @param at.lab
+#' @param ci.lab
+#' @param na.action
+#' @param pdig
+#' @param graph.lab
+#' @param ci.correct
+#' @param scale.override
+#' @param ...
 #'
 #' @return invisibly returns NULL
 #'
 #' @examples
 #' \dontrun{snippets()}
 #' @noRd
+#'
+
+
 
 sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
                     footnote="",varlist=NULL,varlabs=NULL,pvals=NULL,refline=0,
