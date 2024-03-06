@@ -46,7 +46,17 @@
 #' @return invisibly returns NULL
 #'
 #' @examples
-#' \dontrun{snippets()}
+#' forest_dat <- data.frame(
+#'   mean = c(.1, .5, .2, .8),
+#'   lower = c(.1, .5, .2, .8) - qnorm(.975),
+#'   upper = c(.1, .5, .2, .8) + qnorm(.975),
+#'   ordervar = rep(c(1,2), each = 2),
+#'   orderlab = rep(c("Study 1", "Study 2"), each = 2),
+#'   subordervar = rep(c(1,2), times = 2),
+#'   suborderlab = rep(c("Endpoint 1", "Endpoint 2"), times = 2),
+#'   p_val = c(.3756, .1023, .1542, .043)
+#' )
+#'
 #' @noRd
 #'
 
@@ -178,7 +188,7 @@ sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
 
   ### add column headings to the plot
   text(mean(c(low.plot,high.plot)), nrows, graph.lab)
-  text(low.all, nrows, col1,     pos=4)
+  text(low.all, nrows, col1, pos=4)
   text(var.pos,nrows,varlabs)
   if(is.null(ci.lab)) text(high.all-ci.correct, nrows, "Estimate [95% CI]", pos=2) else text(high.all-ci.correct, nrows, paste(ci.lab,"[95% CI]"), pos=2)
 

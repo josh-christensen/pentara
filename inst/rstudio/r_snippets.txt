@@ -54,3 +54,6 @@ snippet other
 snippet vother
   haven::read_sas("`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Data", "Validation", "Other")`/${1:dataset_name}.sas7bdat")
 
+snippet out
+  "`r file.path(stringr::str_remove(stringr::str_extract(current_document_path, "([^/]*/){4}"), "/$"), "Output")`/${1:file_name}"
+

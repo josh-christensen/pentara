@@ -1,3 +1,7 @@
+
+
+subject_gst <- function(data_frame, treat = "TRTP", base_visit = "Baseline", gst_components, direction)
+
 #The GST function, it expects a CDISC/ADaMs style dataset
 GST=function(data, trt="TRT01P", baseline="Baseline", gst_paramcd_list, direction=NULL, gst_names, sdcols=c("USUBJID", "CHG", "BASE", "AVISIT", "ANL01FL"), na.rm=T){
   dat=as.data.table(copy(data))
