@@ -57,10 +57,7 @@
 #'   p_val = c(.3756, .1023, .1542, .043)
 #' )
 #'
-#' @noRd
-#'
-
-
+#' @export
 
 sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
                     footnote="",varlist=NULL,varlabs=NULL,pvals=NULL,refline=0,

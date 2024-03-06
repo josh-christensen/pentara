@@ -1,5 +1,3 @@
-# suppressMessages(require(metafor))
-
 forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = FALSE,
                         xlim, alim, ylim, at, steps = 5, level = 95, digits = 2,
                         refline = 0, xlab, slab, ilab, ilab.xpos, ilab.pos, subset,
