@@ -91,4 +91,19 @@ forest_dat <- data.frame(
   p_val = c(.3756, .1023, .1542, .043)
 )
 
+sforest(
+  dat = forest_dat,
+  res = "mean",
+  ci.lb = "lower",
+  ci.ub = "upper",
+  ordervar = "ordervar",
+  orderlab = "orderlab",
+  suborder = "subordervar",
+  sublab = "suborderlab",
+  varlist = c("p_val"),
+  varlabs = c("P-Value"),
+  pvals = c("p_val"),
+  xlab = "Treatment Effect",
+  latex.out = FALSE
+)
 }
