@@ -42,11 +42,11 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
   else {
     measure <- attr(yi, "measure")
   }
-  if (hasArg(ci.lb) && hasArg(ci.ub)) {
+  if (methods::hasArg(ci.lb) && methods::hasArg(ci.ub)) {
     if (length(ci.lb) != length(ci.ub))
       stop("Length of ci.lb and ci.ub do not match.")
     if (missing(vi) && missing(sei)) {
-      vi <- ((ci.ub - ci.lb)/(2 * qnorm(alpha/2, lower.tail = FALSE)))^2
+      vi <- ((ci.ub - ci.lb)/(2 * stats::qnorm(alpha/2, lower.tail = FALSE)))^2
     }
     else {
       if (missing(vi))
@@ -62,16 +62,16 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
       }
       else {
         vi <- sei^2
-        ci.lb <- yi - qnorm(alpha/2, lower.tail = FALSE) *
+        ci.lb <- yi - stats::qnorm(alpha/2, lower.tail = FALSE) *
           sei
-        ci.ub <- yi + qnorm(alpha/2, lower.tail = FALSE) *
+        ci.ub <- yi + stats::qnorm(alpha/2, lower.tail = FALSE) *
           sei
       }
     }
     else {
-      ci.lb <- yi - qnorm(alpha/2, lower.tail = FALSE) *
+      ci.lb <- yi - stats::qnorm(alpha/2, lower.tail = FALSE) *
         sqrt(vi)
-      ci.ub <- yi + qnorm(alpha/2, lower.tail = FALSE) *
+      ci.ub <- yi + stats::qnorm(alpha/2, lower.tail = FALSE) *
         sqrt(vi)
     }
   }
@@ -281,25 +281,25 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
   else {
     at.lab <- formatC(at.lab, digits = digits[2], format = "f")
   }
-  par.mar <- par("mar")
+  par.mar <- graphics::par("mar")
   par.mar.adj <- par.mar - c(0, 3, 1, 1)
   par.mar.adj[par.mar.adj < 0] <- 0
-  par(mar = par.mar.adj)
-  on.exit(par(mar = par.mar))
-  par(bg="white")
+  graphics::par(mar = par.mar.adj)
+  on.exit(graphics::par(mar = par.mar))
+  graphics::par(bg="white")
   if(!is.null(scale.override)) {
     xlim = range(scale.override)
   }
   plot(NA, NA, xlim = xlim, ylim = ylim, xlab = "", ylab = "",
        yaxt = "n", xaxt = "n", xaxs = "i", bty = "n", ...)
-  abline(h = ylim[2] - 2, ...)
-  par.usr <- par("usr")
+  graphics::abline(h = ylim[2] - 2, ...)
+  par.usr <- graphics::par("usr")
   height <- par.usr[4] - par.usr[3]
   lheight <- strheight("O")
   cex.adj <- ifelse(k * lheight > height * 0.8, height/(1.25 *
                                                           k * lheight), 1)
   if (is.null(cex)) {
-    cex <- par("cex") * cex.adj
+    cex <- graphics::par("cex") * cex.adj
   }
   else {
     if (is.null(cex.lab))
@@ -308,9 +308,9 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
       cex.axis <- cex
   }
   if (is.null(cex.lab))
-    cex.lab <- par("cex") * cex.adj
+    cex.lab <- graphics::par("cex") * cex.adj
   if (is.null(cex.axis))
-    cex.axis <- par("cex") * cex.adj
+    cex.axis <- graphics::par("cex") * cex.adj
   if(!is.null(scale.override)) {
     at = scale.override
   }
@@ -319,8 +319,8 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
   if (missing(xlab))
     xlab <- .setxlab(measure, transf.char, atransf.char,
                      gentype = 1)
-  mtext(xlab, side = 1, at = min(at) + (max(at) - min(at))/2,
-        line = par("mgp")[1] - 0.5, cex = cex.lab, ...)
+  graphics::mtext(xlab, side = 1, at = min(at) + (max(at) - min(at))/2,
+        line = graphics::par("mgp")[1] - 0.5, cex = cex.lab, ...)
   if (is.numeric(refline)) {
     segments(refline, ylim[1] - 5, refline, ylim[2] - 2,
              lty = "dotted", col=refcol, ...)}
@@ -346,14 +346,14 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
               ...)
     }
   }
-  text(xlim[1], rows, slab, pos = 4, cex = cex, ...)
+  graphics::text(xlim[1], rows, slab, pos = 4, cex = cex, ...)
   if (!is.null(ilab)) {
     if (is.null(ilab.xpos))
       stop("Must specify 'ilab.xpos' argument when adding information with 'ilab'.")
     if (length(ilab.xpos) != NCOL(ilab))
       stop("Number of 'ilab' columns does not match length of 'ilab.xpos' argument.")
     for (l in seq.int(NCOL(ilab))) {
-      text(ilab.xpos[l], rows, ilab[, l], pos = ilab.pos[l],
+      graphics::text(ilab.xpos[l], rows, ilab[, l], pos = ilab.pos[l],
            cex = cex, ...)
     }
   }
@@ -393,7 +393,7 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
     }
     annotext <- apply(annotext, 1, paste, collapse = "")
     annotext[grep("NA",annotext)] = ""
-    text(x = xlim[2]-ci.correct, rows, labels = annotext, pos = 2, cex = cex,
+    graphics::text(x = xlim[2]-ci.correct, rows, labels = annotext, pos = 2, cex = cex,
          ...)
   }
   points(yi, rows, pch = pch, cex = cex * psize, ...)
@@ -413,7 +413,7 @@ makeFootnote <- function(footnoteText=
 }
 
 add.var <- function(x,pos,rows,is.pval=F,thresh=0.05,bold.col=bold.col,highbold,show,nobold=FALSE,trendthresh=0.05,trend.col="red",na.action=na.action,pdig) {
-  par(font=1)
+  graphics::par(font=1)
   if(is.pval) {
     x <- as.numeric(as.character(x))
     if(!highbold) {
@@ -436,15 +436,15 @@ add.var <- function(x,pos,rows,is.pval=F,thresh=0.05,bold.col=bold.col,highbold,
     tsig[is.na(tsig)] = FALSE
     sig[is.na(sig)] = FALSE
 
-    if(sum(ns)>0) text(pos,rows[ns],cex=.75,pvalc[ns])
-    if(sum(tsig)>0) text(pos,rows[tsig],cex=.75,pvalc[tsig],col=trend.col)
+    if(sum(ns)>0) graphics::text(pos,rows[ns],cex=.75,pvalc[ns])
+    if(sum(tsig)>0) graphics::text(pos,rows[tsig],cex=.75,pvalc[tsig],col=trend.col)
 
-    par(font=2)
+    graphics::par(font=2)
     if(sum(sig)>0) {
-      text(pos,rows[sig],cex=.75,pvalc[sig],col=bold.col)
+      graphics::text(pos,rows[sig],cex=.75,pvalc[sig],col=bold.col)
     }
   } else {
-    text(pos,rows,cex=.75,x)
+    graphics::text(pos,rows,cex=.75,x)
   }
 }
 

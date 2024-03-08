@@ -1,36 +1,53 @@
 #' @title Classic forest plot
 #'
-#' @description
-#' Creates forest plot that matches Pentara's historic forest plot style.
+#' @description Creates forest plot that matches Pentara's historic forest plot
+#'   style.
 #'
 #' @param dat data for the plot
 #' @param res a string naming a column to plot as points
 #' @param ci.lb a string naming column to plot as ci upper bounds
 #' @param ci.ub a string naming column to plot as ci lower bounds
-#' @param ordervar a string naming a column that defines the order of sections. The column must be numeric and have the same value for all rows in the same section.
-#' @param orderlab a string naming a column of section labels. The column must be character and have the same value for all rows in the same section.
-#' @param suborder a string naming a column that defines the order within sections. The column must be numeric and have different values for all rows in the same section.
-#' @param sublab a string naming a column of row labels. The column must be character and have different values for all rows in the same section.
+#' @param ordervar a string naming a column that defines the order of sections.
+#'   The column must be numeric and have the same value for all rows in the same
+#'   section.
+#' @param orderlab a string naming a column of section labels. The column must
+#'   be character and have the same value for all rows in the same section.
+#' @param suborder a string naming a column that defines the order within
+#'   sections. The column must be numeric and have different values for all rows
+#'   in the same section.
+#' @param sublab a string naming a column of row labels. The column must be
+#'   character and have different values for all rows in the same section.
 #' @param xlab a string to be used as the x-axis label
-#' @param footnote
-#' @param varlist a character vector containing the names of other columns to be included in the plot
-#' @param varlabs a character vector containing the labels to be used in the plot for variables in varlist
-#' @param pvals a character vector containing the names of columns in varlist that should be formatted as p-values
-#' @param refline
-#' @param col
-#' @param wd1
-#' @param wd2
-#' @param alim
-#' @param col1
-#' @param bold.col
-#' @param latex.out
-#' @param express
-#' @param expresso
-#' @param highbold
-#' @param digits
-#' @param refcol
-#' @param show
-#' @param nobold
+#' @param footnote a string to use as a footnote
+#' @param varlist a character vector containing the names of other columns to be
+#'   included in the plot
+#' @param varlabs a character vector containing the labels to be used in the
+#'   plot for variables in varlist
+#' @param pvals a character vector containing the names of columns in varlist
+#'   that should be formatted as p-values
+#' @param refline a numeric value indicating where the dashed vertical reference
+#'   line should be drawn
+#' @param col color used for the background bands
+#' @param wd1 numeric adjustment for the space between the left text and the
+#'   plot
+#' @param wd2 numeric adjustment for the space between the right text and the
+#'   plot
+#' @param alim adjust the x-axis limits for the plot
+#' @param col1 a string used to label the column of text on the left of the plot
+#' @param bold.col color for bold p-values
+#' @param latex.out draws only a box around what won't get cropped by latex
+#' @param express logical. If TRUE, do not coerce sublab variable to character
+#'   and do not automatically indent
+#' @param expresso logical. if TRUE, do not coerce orderlab variable to
+#'   character
+#' @param highbold logical. Currently must be FALSE
+#' @param digits numeric vector indicating how many digitis should be displayed
+#'   after the decimal palce in the estimate column and on the x-axis. If only
+#'   one number is provided it is used for both
+#' @param refcol color for the reference line
+#' @param show logical vector of the same length as the number of rows in the
+#'   plot indicating which p-values should be displayed
+#' @param nobold logical. If TRUE do not bold significant p-values
 #' @param wgts
 #' @param trendthresh
 #' @param trend.col
@@ -41,7 +58,7 @@
 #' @param graph.lab
 #' @param ci.correct
 #' @param scale.override
-#' @param ...
+#' @param ... Further arguments to be passed to various subplotting functions
 #'
 #' @return invisibly returns NULL
 #'
@@ -77,7 +94,7 @@
 sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
                     footnote="",varlist=NULL,varlabs=NULL,pvals=NULL,refline=0,
                     col="aliceblue",wd1=0.5,wd2=0.5,alim=NULL,col1=" ",bold.col="black",
-                    latex.out=TRUE,express=FALSE,expresso=FALSE,highbold=F,digits=2,
+                    latex.out=TRUE,express=FALSE,expresso=FALSE,highbold=FALSE,digits=2,
                     refcol="black",show=NULL,nobold=FALSE,wgts=NULL,trendthresh=0.05,trend.col="black",
                     at.lab=NULL,ci.lab=NULL,na.action=NULL,pdig=4,graph.lab="Graphical Summary",ci.correct=0,
                     scale.override=NULL,...) {

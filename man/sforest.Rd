@@ -28,7 +28,7 @@ sforest(
   latex.out = TRUE,
   express = FALSE,
   expresso = FALSE,
-  highbold = F,
+  highbold = FALSE,
   digits = 2,
   refcol = "black",
   show = NULL,
@@ -55,29 +55,79 @@ sforest(
 
 \item{ci.ub}{a string naming column to plot as ci lower bounds}
 
-\item{ordervar}{a string naming a column that defines the order of sections. The column must be numeric and have the same value for all rows in the same section.}
+\item{ordervar}{a string naming a column that defines the order of sections.
+The column must be numeric and have the same value for all rows in the same
+section.}
 
-\item{orderlab}{a string naming a column of section labels. The column must be character and have the same value for all rows in the same section.}
+\item{orderlab}{a string naming a column of section labels. The column must
+be character and have the same value for all rows in the same section.}
 
-\item{suborder}{a string naming a column that defines the order within sections. The column must be numeric and have different values for all rows in the same section.}
+\item{suborder}{a string naming a column that defines the order within
+sections. The column must be numeric and have different values for all rows
+in the same section.}
 
-\item{sublab}{a string naming a column of row labels. The column must be character and have different values for all rows in the same section.}
+\item{sublab}{a string naming a column of row labels. The column must be
+character and have different values for all rows in the same section.}
 
 \item{xlab}{a string to be used as the x-axis label}
 
-\item{varlist}{a character vector containing the names of other columns to be included in the plot}
+\item{footnote}{a string to use as a footnote}
 
-\item{varlabs}{a character vector containing the labels to be used in the plot for variables in varlist}
+\item{varlist}{a character vector containing the names of other columns to be
+included in the plot}
 
-\item{pvals}{a character vector containing the names of columns in varlist that should be formatted as p-values}
+\item{varlabs}{a character vector containing the labels to be used in the
+plot for variables in varlist}
 
-\item{...}{}
+\item{pvals}{a character vector containing the names of columns in varlist
+that should be formatted as p-values}
+
+\item{refline}{a numeric value indicating where the dashed vertical reference
+line should be drawn}
+
+\item{col}{color used for the background bands}
+
+\item{wd1}{numeric adjustment for the space between the left text and the
+plot}
+
+\item{wd2}{numeric adjustment for the space between the right text and the
+plot}
+
+\item{alim}{adjust the x-axis limits for the plot}
+
+\item{col1}{a string used to label the column of text on the left of the plot}
+
+\item{bold.col}{color for bold p-values}
+
+\item{latex.out}{draws only a box around what won't get cropped by latex}
+
+\item{express}{logical. If TRUE, do not coerce sublab variable to character
+and do not automatically indent}
+
+\item{expresso}{logical. if TRUE, do not coerce orderlab variable to
+character}
+
+\item{highbold}{logical. Currently must be FALSE}
+
+\item{digits}{numeric vector indicating how many digitis should be displayed
+after the decimal palce in the estimate column and on the x-axis. If only
+one number is provided it is used for both}
+
+\item{refcol}{color for the reference line}
+
+\item{show}{logical vector of the same length as the number of rows in the
+plot indicating which p-values should be displayed}
+
+\item{nobold}{logical. If TRUE do not bold significant p-values}
+
+\item{...}{Further arguments to be passed to various subplotting functions}
 }
 \value{
 invisibly returns NULL
 }
 \description{
-Creates forest plot that matches Pentara's historic forest plot style.
+Creates forest plot that matches Pentara's historic forest plot
+style.
 }
 \examples{
 forest_dat <- data.frame(
