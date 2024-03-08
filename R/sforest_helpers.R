@@ -295,7 +295,7 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
   graphics::abline(h = ylim[2] - 2, ...)
   par.usr <- graphics::par("usr")
   height <- par.usr[4] - par.usr[3]
-  lheight <- strheight("O")
+  lheight <- graphics::strheight("O")
   cex.adj <- ifelse(k * lheight > height * 0.8, height/(1.25 *
                                                           k * lheight), 1)
   if (is.null(cex)) {
@@ -314,23 +314,23 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
   if(!is.null(scale.override)) {
     at = scale.override
   }
-  axis(side = 1, at = at, labels = at.lab, cex.axis = cex.axis,
+  graphics::axis(side = 1, at = at, labels = at.lab, cex.axis = cex.axis,
        ...)
-  if (missing(xlab))
-    xlab <- .setxlab(measure, transf.char, atransf.char,
-                     gentype = 1)
+  # if (missing(xlab))
+  #   xlab <- .setlab(measure, transf.char, atransf.char,
+  #                    gentype = 1)
   graphics::mtext(xlab, side = 1, at = min(at) + (max(at) - min(at))/2,
         line = graphics::par("mgp")[1] - 0.5, cex = cex.lab, ...)
   if (is.numeric(refline)) {
-    segments(refline, ylim[1] - 5, refline, ylim[2] - 2,
+    graphics::segments(refline, ylim[1] - 5, refline, ylim[2] - 2,
              lty = "dotted", col=refcol, ...)}
   for (i in seq.int(k)) {
     if (is.na(yi[i]) || is.na(ci.lb)[i] || is.na(ci.ub)[i])
       next
-    segments(max(ci.lb[i], alim[1]), rows[i], min(ci.ub[i],
+    graphics::segments(max(ci.lb[i], alim[1]), rows[i], min(ci.ub[i],
                                                   alim[2]), rows[i], ...)
     if (ci.lb[i] <= alim[1]) {
-      polygon(x = c(alim[1], alim[1] + (1.4/100) * cex *
+      graphics::polygon(x = c(alim[1], alim[1] + (1.4/100) * cex *
                       (xlim[2] - xlim[1]), alim[1] + (1.4/100) * cex *
                       (xlim[2] - xlim[1]), alim[1]), y = c(rows[i],
                                                            rows[i] + (height/150) * cex * efac, rows[i] -
@@ -338,7 +338,7 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
               ...)
     }
     if (ci.ub[i] >= alim[2]) {
-      polygon(x = c(alim[2], alim[2] - (1.4/100) * cex *
+      graphics::polygon(x = c(alim[2], alim[2] - (1.4/100) * cex *
                       (xlim[2] - xlim[1]), alim[2] - (1.4/100) * cex *
                       (xlim[2] - xlim[1]), alim[2]), y = c(rows[i],
                                                            rows[i] + (height/150) * cex * efac, rows[i] -
@@ -396,20 +396,20 @@ forest.new <- function (x, vi, sei, ci.lb, ci.ub, annotate = TRUE, showweight = 
     graphics::text(x = xlim[2]-ci.correct, rows, labels = annotext, pos = 2, cex = cex,
          ...)
   }
-  points(yi, rows, pch = pch, cex = cex * psize, ...)
+  graphics::points(yi, rows, pch = pch, cex = cex * psize, ...)
   invisible()
 }
 
 makeFootnote <- function(footnoteText=
                            format(Sys.time(), "%d %b %Y"),
-                         size= .6, color= grey(.3)) {
-  pushViewport(viewport())
-  grid.text(label= footnoteText ,
-            x = unit(0,"npc") + unit(2, "mm"),
-            y= unit(2, "mm"),
+                         size= .6, color= grDevices::grey(.3)) {
+  grid::pushViewport(grid::viewport())
+  grid::grid.text(label= footnoteText ,
+            x = grid::unit(0,"npc") + grid::unit(2, "mm"),
+            y= grid::unit(2, "mm"),
             just=c("left", "bottom"),
-            gp=gpar(cex= size, col=color,fontface="italic"))
-  popViewport()
+            gp=grid::gpar(cex= size, col=color,fontface="italic"))
+  grid::popViewport()
 }
 
 add.var <- function(x,pos,rows,is.pval=F,thresh=0.05,bold.col=bold.col,highbold,show,nobold=FALSE,trendthresh=0.05,trend.col="red",na.action=na.action,pdig) {

@@ -48,16 +48,21 @@
 #' @param show logical vector of the same length as the number of rows in the
 #'   plot indicating which p-values should be displayed
 #' @param nobold logical. If TRUE do not bold significant p-values
-#' @param wgts
-#' @param trendthresh
-#' @param trend.col
-#' @param at.lab
-#' @param ci.lab
-#' @param na.action
-#' @param pdig
-#' @param graph.lab
-#' @param ci.correct
-#' @param scale.override
+#' @param wgts numeric vector that shifts added text columns multiplicatively
+#'   relative to the plot
+#' @param trendthresh threshold for p-values identifying a trend
+#' @param trend.col color to use in identifying p-values that show a trend
+#' @param at.lab vector of labels for x-axis ticks. Must be used with at and
+#'   have the same length as at
+#' @param at vector of numeric values at which to place x-axis ticks
+#' @param ci.lab string used to label the default column in the form '`string`
+#'   \[95% CI\]'
+#' @param na.action na.action to be used within sforest
+#' @param pdig number of digits to display for p-values
+#' @param graph.lab label for the top of the plot
+#' @param ci.correct number used to move the default CI column to the left
+#' @param scale.override numeric vector of the same length as at.lab that
+#'   creates a new x-axis spanning the entire graphic. Rarely useful
 #' @param ... Further arguments to be passed to various subplotting functions
 #'
 #' @return invisibly returns NULL
@@ -96,16 +101,15 @@ sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
                     col="aliceblue",wd1=0.5,wd2=0.5,alim=NULL,col1=" ",bold.col="black",
                     latex.out=TRUE,express=FALSE,expresso=FALSE,highbold=FALSE,digits=2,
                     refcol="black",show=NULL,nobold=FALSE,wgts=NULL,trendthresh=0.05,trend.col="black",
-                    at.lab=NULL,ci.lab=NULL,na.action=NULL,pdig=4,graph.lab="Graphical Summary",ci.correct=0,
+                    at=NULL,at.lab=NULL,ci.lab=NULL,na.action=NULL,pdig=4,graph.lab="Graphical Summary",ci.correct=0,
                     scale.override=NULL,...) {
-  suppressMessages(require(grid))
 
   if(!is.null(na.action)) {
     old.na.action = options()$na.action
     options(na.action=na.action)
   }
   ### decrease margins so the full space is used
-  if(footnote!="") par(mar=c(4.5,4,1,2),font=1) else par(mar=c(4,4,1,2),font=1)
+  if(footnote!="") graphics::par(mar=c(4.5,4,1,2),font=1) else graphics::par(mar=c(4,4,1,2),font=1)
 
   ordervar <- as.numeric(as.character(dat[,ordervar]))
   suborder <- as.numeric(as.character(dat[,suborder]))
@@ -180,11 +184,11 @@ sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
   ha <- high.all+0.5*range.plot
   la <- low.all-0.5*range.plot
   nrows = length(res)+length(olab)+2
-  row1 <- length(ordervar)+seq(along=unique(ordervar))-rev(c(unname(by(seq(along=ordervar),ordervar,tail,n=1))))
-  row2 <- length(ordervar)+seq(along=unique(ordervar))-rev(c(unname(by(seq(along=ordervar),ordervar,head,n=1))))
+  row1 <- length(ordervar)+seq(along=unique(ordervar))-rev(c(unname(by(seq(along=ordervar),ordervar,utils::tail,n=1))))
+  row2 <- length(ordervar)+seq(along=unique(ordervar))-rev(c(unname(by(seq(along=ordervar),ordervar,utils::head,n=1))))
   poly.x <- c(la,rep(c(ha,ha,la,la),times=ceiling(length(row1)/2)))
   if(length(row1) %% 2 ==0) poly.y <- c(rep(row2+1.5,each=2),row2[1]+1.5) else poly.y <- c(rep(row1-.5,each=2),rep(row2[length(row2)]+1.5,2),row1[1]-.5)
-  eval(parse(text=paste0("rows <- c(",paste(paste(row1,row2,sep=":"),collapse=","),")")))
+  rows <- eval(parse(text=paste0("c(",paste(paste(row1,row2,sep=":"),collapse=","),")")))
 
   ### set up forest plot (with 2x2 table counts added; rows argument is used
   ### to specify exactly in which rows the outcomes will be plotted)
@@ -197,7 +201,7 @@ sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
              rows=rows,
              xlab=xlab,
              refcol=refcol,
-             panel.first=polygon(poly.x,poly.y,col=col,border=NA),at.lab=at.lab,
+             panel.first=graphics::polygon(poly.x,poly.y,col=col,border=NA),at=at,at.lab=at.lab,
              ci.correct=ci.correct,scale.override=scale.override,...)
 
   if(is.null(wgts)) wgts = rep(1,nvars)
@@ -207,24 +211,24 @@ sforest <- function(dat,res,ci.lb,ci.ub,ordervar,orderlab,suborder,sublab,xlab,
 
   ### set font expansion factor (as in forest() above) and use bold italic
   ### font and save original settings in object 'op'
-  op <- par(cex=.75, font=4)
+  op <- graphics::par(cex=.75, font=4)
 
   ### add text for the subgroups
-  text(low.all, row2+1, pos=4, olab)
+  graphics::text(low.all, row2+1, pos=4, olab)
 
   ### switch to bold font
-  par(font=2)
+  graphics::par(font=2)
 
   ### add column headings to the plot
-  text(mean(c(low.plot,high.plot)), nrows, graph.lab)
-  text(low.all, nrows, col1, pos=4)
-  text(var.pos,nrows,varlabs)
-  if(is.null(ci.lab)) text(high.all-ci.correct, nrows, "Estimate [95% CI]", pos=2) else text(high.all-ci.correct, nrows, paste(ci.lab,"[95% CI]"), pos=2)
+  graphics::text(mean(c(low.plot,high.plot)), nrows, graph.lab)
+  graphics::text(low.all, nrows, col1, pos=4)
+  graphics::text(var.pos,nrows,varlabs)
+  if(is.null(ci.lab)) graphics::text(high.all-ci.correct, nrows, "Estimate [95% CI]", pos=2) else graphics::text(high.all-ci.correct, nrows, paste(ci.lab,"[95% CI]"), pos=2)
 
   makeFootnote(footnote)
   ### set par back to the original settings
-  par(op)
+  graphics::par(op)
   if(!is.null(na.action)) options(na.action=old.na.action)
   ### Draw a box around everything that won't get cropped by latex
-  if(latex.out) grid.polygon(x=c(0.005,0.005,0.995,0.995),y=c(0.005,0.995,0.995,0.005))
+  if(latex.out) grid::grid.polygon(x=c(0.005,0.005,0.995,0.995),y=c(0.005,0.995,0.995,0.005))
 }

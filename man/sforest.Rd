@@ -36,6 +36,7 @@ sforest(
   wgts = NULL,
   trendthresh = 0.05,
   trend.col = "black",
+  at = NULL,
   at.lab = NULL,
   ci.lab = NULL,
   na.action = NULL,
@@ -119,6 +120,32 @@ one number is provided it is used for both}
 plot indicating which p-values should be displayed}
 
 \item{nobold}{logical. If TRUE do not bold significant p-values}
+
+\item{wgts}{numeric vector that shifts added text columns multiplicatively
+relative to the plot}
+
+\item{trendthresh}{threshold for p-values identifying a trend}
+
+\item{trend.col}{color to use in identifying p-values that show a trend}
+
+\item{at}{vector of numeric values at which to place x-axis ticks}
+
+\item{at.lab}{vector of labels for x-axis ticks. Must be used with at and
+have the same length as at}
+
+\item{ci.lab}{string used to label the default column in the form '\code{string}
+[95\% CI]'}
+
+\item{na.action}{na.action to be used within sforest}
+
+\item{pdig}{number of digits to display for p-values}
+
+\item{graph.lab}{label for the top of the plot}
+
+\item{ci.correct}{number used to move the default CI column to the left}
+
+\item{scale.override}{numeric vector of the same length as at.lab that
+creates a new x-axis spanning the entire graphic. Rarely useful}
 
 \item{...}{Further arguments to be passed to various subplotting functions}
 }

@@ -11,9 +11,11 @@ LazyData: true
 RoxygenNote: 7.2.3
 Imports: 
     ggplot2,
-    haven,
     lifecycle,
+    methods,
     rstudioapi,
-    stringr,
     usethis
 Roxygen: list(markdown = TRUE)
+Suggests: 
+    haven,
+    stringr
